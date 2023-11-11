@@ -7,6 +7,9 @@ Welcome to the NISR Data Science Hackathon repository! This repository contains 
 - [Overview](#overview)
 - [Getting Started](#getting-started)
 - [Screenshot](#screenshot)
+- [Data Used](#data-used)
+- [Dashboard Information](#dashboard-information)
+- [How to Interact](#how-to-interact)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -20,12 +23,30 @@ This repository is created for the NISR Data Science Hackathon. It provides a st
 
    ```bash
    git clone https://github.com/Makuo67/NISR_Datathon.git
- 
+   ```
+
 ## Screenshot
+
 ![Dashboard Screenshot](NISR_Dashboard.png)
 
+## Data Used
+
+Our interactive dashboard relies on two primary datasets: Gross Domestic Product (GDP) data and Consumer Price Index (CPI) data. These datasets, sourced from NISR, serve as the foundation for our visualizations and analyses, offering a comprehensive view of Rwanda's economic landscape in 2022.
+
+## DashBoard Information
+
+The dashboard aims to communicate key insights derived from the GDP and CPI datasets. Through visually compelling charts, graphs, and maps, users can explore trends, sectoral breakdowns, and global comparisons, gaining a deeper understanding of Rwanda's economic performance in 2022.
+
+## How to Interact
+
+1. **GDP Overview:** Explore the economic heartbeat of Rwanda, analyzing major contributors to GDP growth and sectoral dynamics.
+
+2. **Sectoral Breakdown:** Delve deeper into specific sectors driving economic growth, understanding their individual impacts on the overall GDP.
+
+3. **CPI Insights:** Navigate inflation and consumer purchasing power trends through intuitive visualizations, highlighting the cost of living.
 
 ## Contributing
+
 Contributions to this repository are welcomed! If you'd like to contribute code, documentation, or other improvements, please follow these steps:
 
 - Fork the repository to your own GitHub account.
@@ -36,4 +57,5 @@ Contributions to this repository are welcomed! If you'd like to contribute code,
 - We'll review your contributions and merge them if they add value to the project.
 
 ## License
+
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
