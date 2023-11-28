@@ -17,13 +17,14 @@ gdp_macro_economy = pd.read_excel(
     engine="openpyxl",
     sheet_name="Table A"
 )
+st.dataframe(gdp_macro_economy)
 
 gdp_expenditure = pd.read_excel(
     io="GDP_data.xlsx",
     engine="openpyxl",
     sheet_name="T3 GDP CY"
 )
-
+st.dataframe(gdp_expenditure)
 sector_gdp = pd.read_excel(
     io="GDP_data.xlsx",
     engine="openpyxl",
@@ -43,7 +44,7 @@ quarterly_gdp = pd.read_excel(
     engine="openpyxl",
     sheet_name="QGDP KP"
 )
-## Loading CPI data file
+# Loading CPI data file
 cpi_urban = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
@@ -69,7 +70,8 @@ st.markdown(
 last_gdp_value = quarterly_gdp['GROSS DOMESTIC PRODUCT (GDP)'].iloc[-1]
 last_gdp_quarter = quarterly_gdp['Quarters'].iloc[-1]
 last_cpi_value = cpi_urban['GENERAL INDEX (CPI)'].iloc[-1]
-inflation_rate = ((cpi_urban['GENERAL INDEX (CPI)'].iloc[-1] / cpi_urban['GENERAL INDEX (CPI)'].iloc[-13]) - 1) * 100
+inflation_rate = ((cpi_urban['GENERAL INDEX (CPI)'].iloc[-1] /
+                  cpi_urban['GENERAL INDEX (CPI)'].iloc[-13]) - 1) * 100
 last_population_value = gdp_macro_economy['Total population (millions)'].iloc[-1]
 
 cards_data = [
@@ -78,7 +80,7 @@ cards_data = [
         'subtitle': 'Constant 2017 prices, Billions RWF',
         'time': f'{last_gdp_quarter}',
         'value': f"{last_gdp_value:.2f}",
-        'icon': '💼' 
+        'icon': '💼'
     },
     {
         'title': 'Consumer Price Index',
@@ -91,7 +93,7 @@ cards_data = [
         'title': 'Inflation Rate',
         'subtitle': 'Year-over-Year',
         'time': 'October 2023',
-        'value': f"{inflation_rate:.2f}%",  
+        'value': f"{inflation_rate:.2f}%",
         'icon': '📈'
     },
     {
@@ -163,13 +165,15 @@ subheader_style = """
 </style>
 """
 st.markdown(subheader_style, unsafe_allow_html=True)
-st.markdown(f'<div class="subheader-container">GDP Dynamics and Insights</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">GDP Dynamics and Insights</div>',
+            unsafe_allow_html=True)
 
 # Create a grid of 2 boxes for GDP visualization
 cola, colb = st.columns(2)
 with cola:
     last_six_years = gdp_macro_economy[gdp_macro_economy['Year'] >= (2022-5)]
-    sector_data_last_six_years = sector_gdp[sector_gdp['Year'].isin(last_six_years['Year'])]
+    sector_data_last_six_years = sector_gdp[sector_gdp['Year'].isin(
+        last_six_years['Year'])]
     # Create the figure
 fig = go.Figure()
 
@@ -215,6 +219,6 @@ fig.update_layout(barmode='stack')
 st.plotly_chart(fig)
 
 
-
 st.markdown(subheader_style, unsafe_allow_html=True)
-st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>',
+            unsafe_allow_html=True)
