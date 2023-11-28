@@ -25,6 +25,30 @@ This repository is created for the NISR Data Science Hackathon. It provides a st
    git clone https://github.com/Makuo67/NISR_Datathon.git
    ```
 
+2. Create Virtual Environment:
+
+   ```bash
+   python -m venv venv
+   ```
+
+3. Activate Virtual Environment:
+   - On Windows:
+   ```bash
+   venv\Scripts\activate
+   ```
+   - On Unix or MacOS:
+   ```bash
+   source venv/bin/activate
+   ```
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. Run App:
+   ```bash
+   streamlit run myapp.py
+   ```
+
 ## Screenshot
 
 ![Dashboard Screenshot](NISR_Dashboard.png)
