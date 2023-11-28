@@ -23,7 +23,7 @@ gdp_expenditure = pd.read_excel(
     engine="openpyxl",
     sheet_name="T3 GDP CY"
 )
-
+st.dataframe(gdp_expenditure)
 sector_gdp = pd.read_excel(
     io="GDP_data.xlsx",
     engine="openpyxl",
