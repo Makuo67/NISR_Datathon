@@ -17,7 +17,7 @@ gdp_macro_economy = pd.read_excel(
     engine="openpyxl",
     sheet_name="Table A"
 )
-# st.dataframe(gdp_macro_economy)
+st.dataframe(gdp_macro_economy)
 
 gdp_expenditure = pd.read_excel(
     io="GDP_data.xlsx",
@@ -44,8 +44,6 @@ quarterly_gdp = pd.read_excel(
     sheet_name="QGDP KP"
 )
 
-# st.dataframe(quarterly_gdp)
-## Loading CPI data file
 cpi_urban = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
@@ -174,24 +172,28 @@ st.markdown(f'<div class="subheader-container">GDP Dynamics and Insights</div>',
 cola, colb = st.columns(2)
 with cola:
     last_six_years = gdp_macro_economy[gdp_macro_economy['Year'] >= (2022-5)]
-    sector_data_last_six_years = sector_gdp[sector_gdp['Year'].isin(last_six_years['Year'])]
+    sector_data_last_six_years = sector_gdp[sector_gdp['Year'].isin(
+        last_six_years['Year'])]
     # Calculate the total GDP for each year for hover information
-    sector_data_last_six_years['Total GDP'] = sector_data_last_six_years[['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY', 'SERVICES', 'TAXES LESS SUBSIDIES ON PRODUCTS']].sum(axis=1)
-
-
+    sector_data_last_six_years['Total GDP'] = sector_data_last_six_years[[
+        'AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY', 'SERVICES', 'TAXES LESS SUBSIDIES ON PRODUCTS']].sum(axis=1)
 
     fig = go.Figure()
     # Add stacked bar chart for each sector
-   
-    sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY', 'SERVICES', 'TAXES LESS SUBSIDIES ON PRODUCTS']
-    colors = ['orange', 'grey', 'brown', 'yellow'] # Adjust the colors as needed
+
+    sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
+               'SERVICES', 'TAXES LESS SUBSIDIES ON PRODUCTS']
+    # Adjust the colors as needed
+    colors = ['orange', 'grey', 'brown', 'yellow']
 
     for sector, color in zip(sectors, colors):
-    # Calculate the percentage for hover as a string
-        sector_percentage = ((sector_data_last_six_years[sector] / sector_data_last_six_years['Total GDP']) * 100).astype(str)
+        # Calculate the percentage for hover as a string
+        sector_percentage = (
+            (sector_data_last_six_years[sector] / sector_data_last_six_years['Total GDP']) * 100).astype(str)
 
     # Create hovertemplate string with percentage included
-        hovertemplate = ['%{y:.2f} billion RWF<br>' + sector + '<br>' + perc + '%' for perc in sector_percentage]
+        hovertemplate = ['%{y:.2f} billion RWF<br>' + sector +
+                         '<br>' + perc + '%' for perc in sector_percentage]
 
         fig.add_trace(go.Bar(
             x=sector_data_last_six_years['Year'],
@@ -200,21 +202,22 @@ with cola:
             marker_color=color,
             hovertemplate=hovertemplate
         ))
-    
+
     # Update the layout for a stacked bar chart
     fig.update_layout(
-            barmode='stack',
-            title='Real GDP Growth (2017 - 2022)',
+        barmode='stack',
+        title='Real GDP Growth (2017 - 2022)',
         yaxis=dict(
             tickmode='auto',
             tickformat=',.1f',  # This will format the tick as a floating number with two decimal places
             title='GDP (in billion RWF)'
         ),
-            xaxis=dict(tickmode='array', tickvals=sector_data_last_six_years['Year']),
-            plot_bgcolor='white',  # Set background color to white for better readability
-        )
+        xaxis=dict(tickmode='array',
+                   tickvals=sector_data_last_six_years['Year']),
+        plot_bgcolor='white',  # Set background color to white for better readability
+    )
 
-        # Display the figure in Streamlit
+    # Display the figure in Streamlit
     st.plotly_chart(fig)
 
 with colb:
@@ -226,15 +229,15 @@ with colb:
 
     # Add the area chart
     fig.add_trace(go.Scatter(
-    x=gdp_growth_data['Year'],
-    y=gdp_growth_data['Growth rate'] * 100,
-    fill='tozeroy', 
-    mode='lines+markers+text',
-    line_color='blue', 
-    text=[f'{rate * 100:.2f}%' for rate in gdp_growth_data['Growth rate']],
-    textposition='top center', 
-    hoverinfo='x+y', 
-    name='GDP Growth Rate'
+        x=gdp_growth_data['Year'],
+        y=gdp_growth_data['Growth rate'] * 100,
+        fill='tozeroy',
+        mode='lines+markers+text',
+        line_color='blue',
+        text=[f'{rate * 100:.2f}%' for rate in gdp_growth_data['Growth rate']],
+        textposition='top center',
+        hoverinfo='x+y',
+        name='GDP Growth Rate'
     ))
 
     # Update layout
@@ -249,7 +252,8 @@ with colb:
     st.plotly_chart(fig)
 
 st.markdown(subheader_style, unsafe_allow_html=True)
-st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>',
+            unsafe_allow_html=True)
 
 # Create the figure
 fig = go.Figure()
