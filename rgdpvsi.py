@@ -32,6 +32,7 @@ yearly_cpi_filtered['Inflation Rate'] = yearly_cpi_filtered['GENERAL INDEX (CPI)
 gdp_filtered = gdp_macro_economy[(gdp_macro_economy['Year'] >= 2010) & (
     gdp_macro_economy['Year'] <= 2022)]
 gdp_filtered['GDP per head (in current US dollars)'] = gdp_filtered['GDP per head (in current US dollars)'].pct_change()
+
 merged_data = pd.merge(yearly_cpi_filtered[['Year', 'GENERAL INDEX (CPI)', 'Inflation Rate']],
                        gdp_filtered[['Year', 'Growth rate.1',
                                      'GDP per head (in current US dollars)']],

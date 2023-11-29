@@ -53,7 +53,7 @@ def display_sector_to_gdp_time_series_analysis():
 
     # Move the legend outside the chart using bbox_to_anchor
     legend = ax.legend(handles=[green_patch, blue_patch, orange_patch, purple_patch],
-                       loc='upper right', bbox_to_anchor=(1, 1))
+                       loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
 
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -152,7 +152,7 @@ def display_quarterly_gdp():
     ]
 
     legend = ax.legend(handles=legend_patches,
-                       loc='upper right', bbox_to_anchor=(1, 1))
+                       loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
 
     # Add Frw(Billion) at the top edge of the y-axis
     ax.annotate('Frw(Billion)', fontsize=10, xy=(0, 1.02),
