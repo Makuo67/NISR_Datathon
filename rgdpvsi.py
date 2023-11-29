@@ -31,9 +31,10 @@ yearly_cpi_filtered['Inflation Rate'] = yearly_cpi_filtered['GENERAL INDEX (CPI)
 
 gdp_filtered = gdp_macro_economy[(gdp_macro_economy['Year'] >= 2010) & (
     gdp_macro_economy['Year'] <= 2022)]
-
+gdp_filtered['GDP per head (in current US dollars)'] = gdp_filtered['GDP per head (in current US dollars)'].pct_change()
 merged_data = pd.merge(yearly_cpi_filtered[['Year', 'GENERAL INDEX (CPI)', 'Inflation Rate']],
-                       gdp_filtered[['Year', 'Growth rate.1']],
+                       gdp_filtered[['Year', 'Growth rate.1',
+                                     'GDP per head (in current US dollars)']],
                        on='Year')
 
 inflation_rate = 'Inflation Rate'
@@ -48,7 +49,10 @@ def display_realgdp_to_inflation():
             marker='o', linestyle='-', color='red', label='Inflation Rate')
 
     ax.plot(merged_data['Year'], merged_data['Growth rate.1'],
-            marker='o', linestyle='-', color='blue', label='Growth rate.1')
+            marker='o', linestyle='-', color='blue', label='Real GDP Growth rate')
+
+    ax.plot(merged_data['Year'], merged_data['GDP per head (in current US dollars)'],
+            marker='o', linestyle='-', color='green', label='Per Capita GDP')
 
     ax.set_title(
         'Trend of Inflation Rate and Real GDP Growth Rate over the Years')
