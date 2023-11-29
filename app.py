@@ -71,7 +71,8 @@ st.markdown(
 last_gdp_value = quarterly_gdp['GROSS DOMESTIC PRODUCT (GDP)'].iloc[-1]
 last_gdp_quarter = quarterly_gdp['Quarters'].iloc[-1]
 last_cpi_value = cpi_urban['GENERAL INDEX (CPI)'].iloc[-1]
-inflation_rate = ((cpi_urban['GENERAL INDEX (CPI)'].iloc[-1] / cpi_urban['GENERAL INDEX (CPI)'].iloc[-13]) - 1) * 100
+inflation_rate = ((cpi_urban['GENERAL INDEX (CPI)'].iloc[-1] /
+                  cpi_urban['GENERAL INDEX (CPI)'].iloc[-13]) - 1) * 100
 last_population_value = gdp_macro_economy['Total population (millions)'].iloc[-1]
 
 cards_data = [
@@ -80,7 +81,7 @@ cards_data = [
         'subtitle': 'Constant 2017 prices, Billions RWF',
         'time': f'{last_gdp_quarter}',
         'value': f"{last_gdp_value:.2f}",
-        'icon': '💼' 
+        'icon': '💼'
     },
     {
         'title': 'Consumer Price Index',
@@ -93,7 +94,7 @@ cards_data = [
         'title': 'Inflation Rate',
         'subtitle': 'Year-over-Year',
         'time': 'October 2023',
-        'value': f"{inflation_rate:.2f}%",  
+        'value': f"{inflation_rate:.2f}%",
         'icon': '📈'
     },
     {
@@ -165,7 +166,8 @@ subheader_style = """
 </style>
 """
 st.markdown(subheader_style, unsafe_allow_html=True)
-st.markdown(f'<div class="subheader-container">GDP Dynamics and Insights</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">GDP Dynamics and Insights</div>',
+            unsafe_allow_html=True)
 
 # Create a grid of 2 boxes for GDP visualization
 cola, colb = st.columns(2)
@@ -244,7 +246,6 @@ with colb:
 
     # Display the figure in Streamlit
     st.plotly_chart(fig)
-
 
 st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>', unsafe_allow_html=True)
