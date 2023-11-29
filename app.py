@@ -17,7 +17,7 @@ gdp_macro_economy = pd.read_excel(
     engine="openpyxl",
     sheet_name="Table A"
 )
-# st.dataframe(gdp_macro_economy)
+st.dataframe(gdp_macro_economy)
 
 gdp_expenditure = pd.read_excel(
     io="GDP_data.xlsx",
@@ -35,7 +35,7 @@ gdp_expenditure_percentage = pd.read_excel(
     engine="openpyxl",
     sheet_name="T3A GDP XCY"
 )
-st.dataframe(gdp_expenditure_percentage)
+
 
 # Load GDP quarterly data files
 quarterly_gdp = pd.read_excel(
