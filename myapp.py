@@ -1,6 +1,7 @@
 import plotly.express as px
 import pandas as pd
 import streamlit as st
+import datetime
 
 # Set Streamlit page configuration
 st.set_page_config(
@@ -64,6 +65,7 @@ selected_style = st.sidebar.selectbox(
 st.markdown(
     '<div style="display: flex; justify-content: center;">'
     '<h1>&#x1F4CA; CPI and GDP DashBoard</h1>'  # Display a title with an emoji
+    '<hr style="width: 100%; border: 1px solid #ccc;">'
     '</div>',
     unsafe_allow_html=True
 )
