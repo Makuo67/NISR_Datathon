@@ -17,7 +17,7 @@ gdp_macro_economy = pd.read_excel(
     engine="openpyxl",
     sheet_name="Table A"
 )
-st.dataframe(gdp_macro_economy)
+# st.dataframe(gdp_macro_economy)
 
 gdp_expenditure = pd.read_excel(
     io="GDP_data.xlsx",
@@ -44,19 +44,20 @@ quarterly_gdp = pd.read_excel(
     sheet_name="QGDP KP"
 )
 
-st.dataframe(quarterly_gdp)
+# st.dataframe(quarterly_gdp)
 ## Loading CPI data file
 cpi_urban = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
     sheet_name="Urban"
 )
-st.dataframe(cpi_urban)
+# st.dataframe(cpi_urban)
 cpi_other_indices = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
     sheet_name="Other_Indices"
 )
+st.dataframe(cpi_other_indices)
 
 # Display the title with emoji centered
 st.markdown(
@@ -250,69 +251,147 @@ with colb:
 st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>', unsafe_allow_html=True)
 
+# Create the figure
+fig = go.Figure()
+
+# Add a line to the figure for each index
+indices = ['General Index excluding fresh Products and energy', 'Energy index', 'Fresh Products index']
+colors = ['blue', 'red', 'green']  # Choose colors that you prefer
+
+for index, color in zip(indices, colors):
+    fig.add_trace(go.Scatter(
+        x=cpi_other_indices['Month'],
+        y=cpi_other_indices[index],
+        mode='lines',
+        name=index,
+        line=dict(color=color)
+    ))
+
+# Update layout
+fig.update_layout(
+    title='CPI-U Trends of Energy Index, Fresh Products Index and General Index',
+    xaxis_title='Month',
+    xaxis=dict(
+        rangeselector=dict(
+            buttons=list([
+                dict(count=1, label='1Y', step='year', stepmode='backward'),
+                dict(count=2, label='2Y', step='year', stepmode='backward'),
+                dict(count=3, label='3Y', step='year', stepmode='backward'),
+                dict(step='all')
+            ])
+        ),
+        type='date',
+        tickformat='%b\n%Y'  # Format the ticks to display abbreviated month and full year
+    ),
+    yaxis_title='CPI Index Value',
+    plot_bgcolor='white'
+)
+
+# Display the figure in Streamlit
+st.plotly_chart(fig)
+
+
+# CPI Trend of Local Goods vs Imported Goods
+# Create the figure
+fig = go.Figure()
+
+# Add a line to the figure for each index
+indices = ['Local Goods Index', 'Imported Goods Index']
+colors = ['red', 'green']  # Choose colors that you prefer
+
+for index, color in zip(indices, colors):
+    fig.add_trace(go.Scatter(
+        x=cpi_other_indices['Month'],
+        y=cpi_other_indices[index],
+        mode='lines',
+        name=index,
+        line=dict(color=color)
+    ))
+
+# Update layout
+fig.update_layout(
+    title='CPI-U Trends of Local Goods vs Imported Goods',
+    xaxis_title='Month',
+    xaxis=dict(
+        rangeselector=dict(
+            buttons=list([
+                dict(count=1, label='1Y', step='year', stepmode='backward'),
+                dict(count=2, label='2Y', step='year', stepmode='backward'),
+                dict(count=3, label='3Y', step='year', stepmode='backward'),
+                dict(step='all')
+            ])
+        ),
+        type='date',
+        tickformat='%b\n%Y'  # Format the ticks to display abbreviated month and full year
+    ),
+    yaxis_title='CPI Index Value',
+    plot_bgcolor='white'
+)
+
+# Display the figure in Streamlit
+st.plotly_chart(fig)
+
+
+# FY Trend
+cpi_urban['Year'] = cpi_urban['Month'].dt.year
+cpi_urban['Month_Name'] = cpi_urban['Month'].dt.month_name()
+
+# Define a function to calculate the year-over-year change rate for each category
+def calculate_change_rate(df, year, categories):
+    current_year_data = df[df['Year'] == year].groupby('Month_Name').mean()
+    previous_year_data = df[df['Year'] == year - 1].groupby('Month_Name').mean()
+
+    # Assuming you want to compare October to October
+    change_rates = {}
+    for category in categories:
+        current_value = current_year_data.loc['October', category]
+        previous_value = previous_year_data.loc['October', category]
+        change_rate = ((current_value - previous_value) / previous_value) * 100
+        change_rates[category] = change_rate
+    
+    return change_rates
+
+# Calculate change rates for the required years
+categories = [
+    'Food and non-alcoholic beverages', 'Alcoholic beverages and tobacco',
+    'Clothing and footwear', 'Housing, water, electricity, gas and other fuels',
+    'Furnishing', 'Health', 
+    'Transport', 'Communication', 'Recreation and culture',	
+    'Education', 'Restaurants and hotels', 'Miscellaneous goods and services'
+
+]
+
+# Calculate change rates for 2022/2023
+change_rates_2022_2023 = calculate_change_rate(cpi_urban, 2023, categories)
+
+# Convert to DataFrame for easier handling
+change_rates_df = pd.DataFrame(list(change_rates_2022_2023.items()), columns=['Category', 'Change Rate'])
+
+# Sort the DataFrame by 'Change Rate' in ascending order
+change_rates_df.sort_values('Change Rate', inplace=True)
+
+# Create the horizontal bar chart
+fig = go.Figure()
+
+fig.add_trace(go.Bar(
+    x=change_rates_df['Change Rate'],
+    y=change_rates_df['Category'],
+    orientation='h',  # Horizontal bar chart
+    text=change_rates_df['Change Rate'].apply(lambda x: f"{x:.2f}%"),  # Add text labels
+    textposition='auto',  # Position the text at the end of bars
+))
+
+# Update layout
+fig.update_layout(
+    title='Year-over-Year Change in CPI (October,2022 - October,2023)',
+    xaxis=dict(title='Change Rate (%)'),
+    yaxis=dict(title='Category'),
+    plot_bgcolor='white',
+    showlegend=False,
+)
+
+# Display the figure in Streamlit
+st.plotly_chart(fig)
 
 st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">Comparisons of GDP and CPI Data</div>', unsafe_allow_html=True)
-
-colx, coly = st.columns(2)
-
-with colx:
-    # 1. Aggregate the CPI data to yearly by averaging
-    cpi_urban['Year'] = pd.to_datetime(cpi_urban['Month']).dt.year
-    yearly_cpi = cpi_urban[cpi_urban['Year'].between(2017, 2022)].groupby('Year')['GENERAL INDEX (CPI)'].mean()
-
-
-    # 2. Calculate the yearly CPI rate as percentage change
-    cpi_rate = yearly_cpi.pct_change().dropna() * 100  # Remove the first NaN value
-
-
-    # 3. Extract the GDP deflator rate for 2017-2022
-    gdp_deflator_rate = gdp_macro_economy[gdp_macro_economy['Year'].between(2017, 2022)]['Growth rate.2']
-
-
-    # 4. Plot the time series line chart
-    fig = go.Figure()
-
-
-    # Add GDP Deflator Rate
-    fig.add_trace(go.Scatter(
-        x=gdp_deflator_rate.index,
-        y=gdp_deflator_rate,
-        mode='lines+markers',
-        name='GDP Deflator Rate',
-        line=dict(color='purple')  # or any color you prefer
-    ))
-
-
-    # Add CPI Rate
-    fig.add_trace(go.Scatter(
-        x=cpi_rate.index,
-        y=cpi_rate,
-        mode='lines+markers',
-        name='CPI Rate',
-        line=dict(color='red')  # or any color you prefer
-    ))
-
-
-    # Update layout to match the expected output
-    fig.update_layout(
-        title='GDP Deflator Rate vs CPI Rate (2017 - 2022)',
-        xaxis=dict(
-            title='Year',
-            tickmode='linear',
-            tickvals=list(range(2017, 2023))
-        ),
-        yaxis=dict(
-            title='Rate (%)',
-            tickmode='linear',
-            range=[min(min(gdp_deflator_rate), min(cpi_rate)), max(max(gdp_deflator_rate), max(cpi_rate))],
-            zeroline=True,
-            zerolinewidth=2,
-            zerolinecolor='black'
-        ),
-        plot_bgcolor='white'
-    )
-
-
-    # Display the figure in Streamlit
-    st.plotly_chart(fig)
