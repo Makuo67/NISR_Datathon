@@ -17,13 +17,13 @@ gdp_macro_economy = pd.read_excel(
     engine="openpyxl",
     sheet_name="Table A"
 )
+st.dataframe(gdp_macro_economy)
 
 gdp_expenditure = pd.read_excel(
     io="GDP_data.xlsx",
     engine="openpyxl",
     sheet_name="T3 GDP CY"
 )
-st.dataframe(gdp_expenditure)
 sector_gdp = pd.read_excel(
     io="GDP_data.xlsx",
     engine="openpyxl",
@@ -43,13 +43,15 @@ quarterly_gdp = pd.read_excel(
     engine="openpyxl",
     sheet_name="QGDP KP"
 )
+
+st.dataframe(quarterly_gdp)
 ## Loading CPI data file
 cpi_urban = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
     sheet_name="Urban"
 )
-
+st.dataframe(cpi_urban)
 cpi_other_indices = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
@@ -170,51 +172,146 @@ cola, colb = st.columns(2)
 with cola:
     last_six_years = gdp_macro_economy[gdp_macro_economy['Year'] >= (2022-5)]
     sector_data_last_six_years = sector_gdp[sector_gdp['Year'].isin(last_six_years['Year'])]
-    # Create the figure
-fig = go.Figure()
+    # Calculate the total GDP for each year for hover information
+    sector_data_last_six_years['Total GDP'] = sector_data_last_six_years[['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY', 'SERVICES', 'TAXES LESS SUBSIDIES ON PRODUCTS']].sum(axis=1)
 
-# Add bar chart for each sector
-fig.add_trace(go.Bar(
-    x=sector_data_last_six_years['Year'],
-    y=sector_data_last_six_years['AGRICULTURE, FORESTRY & FISHING'],
-    name='Agriculture, Forestry & Fishing',
-    marker_color='orange'
-))
-fig.add_trace(go.Bar(
-    x=sector_data_last_six_years['Year'],
-    y=sector_data_last_six_years['INDUSTRY'],
-    name='Industry',
-    marker_color='grey'
-))
-fig.add_trace(go.Bar(
-    x=sector_data_last_six_years['Year'],
-    y=sector_data_last_six_years['SERVICES'],
-    name='Services',
-    marker_color='brown'
-))
-fig.add_trace(go.Bar(
-    x=sector_data_last_six_years['Year'],
-    y=sector_data_last_six_years['TAXES LESS SUBSIDIES ON PRODUCTS'],
-    name='Taxes less subsidies on products',
-    marker_color='yellow'
-))
 
-# Add line chart for growth rate
-fig.add_trace(go.Scatter(
-    x=last_six_years['Year'],
-    y=last_six_years['Growth rate'],
-    name='Growth Rate',
-    mode='lines+markers',
-    line=dict(color='black', dash='dash')
-))
 
-# Update the layout for a stacked bar chart
-fig.update_layout(barmode='stack')
+    fig = go.Figure()
+    # Add stacked bar chart for each sector
+   
+    sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY', 'SERVICES', 'TAXES LESS SUBSIDIES ON PRODUCTS']
+    colors = ['orange', 'grey', 'brown', 'yellow'] # Adjust the colors as needed
 
-# Display the figure in Streamlit
-st.plotly_chart(fig)
+    for sector, color in zip(sectors, colors):
+    # Calculate the percentage for hover as a string
+        sector_percentage = ((sector_data_last_six_years[sector] / sector_data_last_six_years['Total GDP']) * 100).astype(str)
 
+    # Create hovertemplate string with percentage included
+        hovertemplate = ['%{y:.2f} billion RWF<br>' + sector + '<br>' + perc + '%' for perc in sector_percentage]
+
+        fig.add_trace(go.Bar(
+            x=sector_data_last_six_years['Year'],
+            y=sector_data_last_six_years[sector],
+            name=sector,
+            marker_color=color,
+            hovertemplate=hovertemplate
+        ))
+    
+    # Update the layout for a stacked bar chart
+    fig.update_layout(
+            barmode='stack',
+            title='Real GDP Growth (2017 - 2022)',
+        yaxis=dict(
+            tickmode='auto',
+            tickformat=',.1f',  # This will format the tick as a floating number with two decimal places
+            title='GDP (in billion RWF)'
+        ),
+            xaxis=dict(tickmode='array', tickvals=sector_data_last_six_years['Year']),
+            plot_bgcolor='white',  # Set background color to white for better readability
+        )
+
+        # Display the figure in Streamlit
+    st.plotly_chart(fig)
+
+with colb:
+    # Filter data to the last six years up to 2022
+    gdp_growth_data = gdp_macro_economy[gdp_macro_economy['Year'] >= (2022-5)]
+
+    # Create a Plotly figure
+    fig = go.Figure()
+
+    # Add the area chart
+    fig.add_trace(go.Scatter(
+    x=gdp_growth_data['Year'],
+    y=gdp_growth_data['Growth rate'] * 100,
+    fill='tozeroy', 
+    mode='lines+markers+text',
+    line_color='blue', 
+    text=[f'{rate * 100:.2f}%' for rate in gdp_growth_data['Growth rate']],
+    textposition='top center', 
+    hoverinfo='x+y', 
+    name='GDP Growth Rate'
+    ))
+
+    # Update layout
+    fig.update_layout(
+        title='GDP Growth Rate (2017 - 2022)',
+        xaxis_title='Year',
+        yaxis_title='Growth Rate (%)',
+        plot_bgcolor='white'
+    )
+
+    # Display the figure in Streamlit
+    st.plotly_chart(fig)
 
 
 st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>', unsafe_allow_html=True)
+
+
+st.markdown(subheader_style, unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">Comparisons of GDP and CPI Data</div>', unsafe_allow_html=True)
+
+colx, coly = st.columns(2)
+
+with colx:
+    # 1. Aggregate the CPI data to yearly by averaging
+    cpi_urban['Year'] = pd.to_datetime(cpi_urban['Month']).dt.year
+    yearly_cpi = cpi_urban[cpi_urban['Year'].between(2017, 2022)].groupby('Year')['GENERAL INDEX (CPI)'].mean()
+
+
+    # 2. Calculate the yearly CPI rate as percentage change
+    cpi_rate = yearly_cpi.pct_change().dropna() * 100  # Remove the first NaN value
+
+
+    # 3. Extract the GDP deflator rate for 2017-2022
+    gdp_deflator_rate = gdp_macro_economy[gdp_macro_economy['Year'].between(2017, 2022)]['Growth rate.2']
+
+
+    # 4. Plot the time series line chart
+    fig = go.Figure()
+
+
+    # Add GDP Deflator Rate
+    fig.add_trace(go.Scatter(
+        x=gdp_deflator_rate.index,
+        y=gdp_deflator_rate,
+        mode='lines+markers',
+        name='GDP Deflator Rate',
+        line=dict(color='purple')  # or any color you prefer
+    ))
+
+
+    # Add CPI Rate
+    fig.add_trace(go.Scatter(
+        x=cpi_rate.index,
+        y=cpi_rate,
+        mode='lines+markers',
+        name='CPI Rate',
+        line=dict(color='red')  # or any color you prefer
+    ))
+
+
+    # Update layout to match the expected output
+    fig.update_layout(
+        title='GDP Deflator Rate vs CPI Rate (2017 - 2022)',
+        xaxis=dict(
+            title='Year',
+            tickmode='linear',
+            tickvals=list(range(2017, 2023))
+        ),
+        yaxis=dict(
+            title='Rate (%)',
+            tickmode='linear',
+            range=[min(min(gdp_deflator_rate), min(cpi_rate)), max(max(gdp_deflator_rate), max(cpi_rate))],
+            zeroline=True,
+            zerolinewidth=2,
+            zerolinecolor='black'
+        ),
+        plot_bgcolor='white'
+    )
+
+
+    # Display the figure in Streamlit
+    st.plotly_chart(fig)
