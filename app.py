@@ -64,6 +64,14 @@ cpi_other_indices = pd.read_excel(
     sheet_name="Other_Indices"
 )
 
+
+# Header and Footer Image
+header_image_path = 'images/NISR_logo.png'
+
+header_col1, header_col2, header_col3 = st.columns([4,6,1])
+with header_col2:
+    st.image(header_image_path, width=400) 
+
 # Display the title with emoji centered
 st.markdown(
     '<div style="text-align: center;">'
@@ -221,3 +229,25 @@ st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">Comparisons of GDP, Inflation and Per Capita Data</div>', unsafe_allow_html=True)
 
 display_realgdp_to_inflation()
+
+# Footer
+import base64
+
+def get_image_as_base64(path):
+    with open(path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode('utf-8')
+
+footer_image_base64 = get_image_as_base64('images/NISR_logo.png')
+
+# Use the base64 string as the source for the image
+footer_html = f"""
+<div style='text-align: center;'>
+    <img src='data:image/png;base64,{footer_image_base64}' style='width: 100px; display: inline-block; margin-right: 10px;'/>
+    <p style='display: inline-block; font-size:20px;'>© 2023 DataDynamos</p>
+</div>
+<div style='text-align:center;'>
+    <p style='display: inline-block; font-size:20px;'>All rights reserved</p>
+</div>
+"""
+st.write("---")
+st.markdown(footer_html, unsafe_allow_html=True)

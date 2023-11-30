@@ -68,7 +68,25 @@ def inflation_by_category():
         yaxis=dict(title='Category'),
         plot_bgcolor='white',
         showlegend=False,
+        width=700
     )
 
     # Display the figure in Streamlit
     st.plotly_chart(fig)
+    st.markdown("""
+    <style>
+    .food {
+        color: #ffff;
+        background-color: #1F51FF;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        width: 50%;
+    }
+    </style>
+    <div class="food">
+        Food and Non Alcoholic Beverages prices experienced significant inflation betwen Oct.2022 to Oct. 2023
+    </div>
+    """, unsafe_allow_html=True)

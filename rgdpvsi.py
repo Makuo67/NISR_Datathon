@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import plotly.graph_objects as go
 import streamlit as st
 
 gdp_macro_economy = pd.read_excel(
@@ -42,40 +43,103 @@ inflation_rate = 'Inflation Rate'
 
 
 def display_realgdp_to_inflation():
-    """Plot Real GDP to Inflation Rate
-    """
-    fig, ax = plt.subplots(figsize=(5, 2))
+    """Plot Real GDP to Inflation Rate using Plotly for interactivity"""
 
-    ax.plot(merged_data['Year'], merged_data['Inflation Rate'],
-            marker='o', linestyle='-', color='red', label='Inflation Rate')
+    # Create Plotly figure
+    fig = go.Figure()
 
-    ax.plot(merged_data['Year'], merged_data['Growth rate.1'],
-            marker='o', linestyle='-', color='blue', label='Real GDP Growth rate')
+    # Add Inflation Rate line
+    fig.add_trace(go.Scatter(
+        x=merged_data['Year'],
+        y=merged_data['Inflation Rate'],
+        mode='lines+markers',
+        name='Inflation Rate',
+        line=dict(color='red')
+    ))
 
-    ax.set_title(
-        'Trend of Inflation Rate and Real GDP Growth Rate over the Years')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Rate Percentage(%)')
-    ax.legend()
+    # Add Real GDP Growth Rate line
+    fig.add_trace(go.Scatter(
+        x=merged_data['Year'],
+        y=merged_data['Growth rate.1'],
+        mode='lines+markers',
+        name='Real GDP Growth rate',
+        line=dict(color='blue')
+    ))
 
-    ax.grid(True)
+    # Update layout
+    fig.update_layout(
+        title='Trend of Inflation Rate and Real GDP Growth Rate over the Years',
+        xaxis_title='Year',
+        yaxis_title='Rate Percentage(%)',
+        legend_title='Indicators',
+        hovermode='x',
+        height=700
+    )
 
-    st.pyplot(fig, use_container_width=True)
+    fig.update_yaxes(range=[-0.05, 0.2]) 
+    # Display the figure in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+    st.markdown("""
+    <style>
+    .info {
+        color: #ffff;
+        background-color: #0047AB;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    </style>
+    <div class="info">
+        Inflation Rate and Real GDP Growth Rate have been fluctuating over the years showing significant economic pressures in 2020 and 2022
+    </div>
+    """, unsafe_allow_html=True)
 
 def display_per_capita():
-    """Plot Real GDP to Inflation Rate
-    """
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(merged_data['Year'], merged_data['GDP per head (in current US dollars)'],
-            marker='o', linestyle='-', color='green', label='Per Capita GDP')
+    """Plot Growth Trend of GDP per Capita over the Years with Plotly for interactivity"""
 
-    ax.set_title(
-        'Growth Trend of GDP per Capita over the Years', fontweight='bold')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Rate Percentage(%)')
-    ax.legend()
+    # Create Plotly figure
+    fig = go.Figure()
 
-    ax.grid(True)
+    # Add GDP per Capita line
+    fig.add_trace(go.Scatter(
+        x=merged_data['Year'],
+        y=merged_data['GDP per head (in current US dollars)'],
+        mode='lines+markers',
+        name='Per Capita GDP',
+        line=dict(color='green')
+    ))
 
-    st.pyplot(fig)
-# display_realgdp_to_inflation()
+    # Update layout
+    fig.update_layout(
+        title='GDP per Capita Growth (In Current US Dollars)',
+        xaxis_title='Year',
+        yaxis_title='GDP per Capita (in current US dollars)',
+        legend_title='Indicator',
+        hovermode='x',
+        height=535
+    )
+
+    # Adjust y-axis scale if needed
+    # Example: setting range from 0 to 15000
+    fig.update_yaxes(range=[-0.05, 0.2])
+
+    # Display the figure in Streamlit
+    st.plotly_chart(fig)
+    st.markdown("""
+    <style>
+    .info {
+        color: #ffff;
+        background-color: #1F51FF;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    </style>
+    <div class="info">
+        The Per capita Income has increased sharply following the COVID-19 pandemic year
+    </div>
+    """, unsafe_allow_html=True)

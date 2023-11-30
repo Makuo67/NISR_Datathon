@@ -45,8 +45,26 @@ def expenditure_vs_GDP(gdp_expenditure_percentage):
         yaxis=dict(title='Growth Rate (%)', tickformat='.2f'),
         barmode='group',  # Use 'group' for grouped bar chart
         plot_bgcolor='white',
-        legend_title_text='Indicator'
+        legend_title_text='Indicator',
+        width=780,
+        height=515
     )
 
     # Display the figure in Streamlit
     st.plotly_chart(fig)
+    st.markdown("""
+    <style>
+    .info {
+        color: #ffff;
+        background-color: #1F51FF;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    </style>
+    <div class="info">
+        The GDP rate and Expenditure rate continues to fluctuate annually but remain, showing prudent fiscal policy planning and implementation.
+    </div>
+    """, unsafe_allow_html=True)

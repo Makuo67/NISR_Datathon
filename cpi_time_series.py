@@ -51,11 +51,17 @@ def energy_vs_freshProducs_vs_general_index():
             tickformat='%b\n%Y'  # Format the ticks to display abbreviated month and full year
         ),
         yaxis_title='CPI Index Value',
-        plot_bgcolor='white'
+        plot_bgcolor='white',
+        width=850
     )
 
     # Display the figure in Streamlit
     st.plotly_chart(fig)
+    st.markdown("""
+    <div class="info">
+        The inflation in the prices of Fresh Products has increased sharply between April 2022 and September 2023, while Energy Prices and General Index Prices remain moderate
+    </div>
+    """, unsafe_allow_html=True)
 
 def localGoods_vs_importedGoods():
     # CPI Trend of Local Goods vs Imported Goods
@@ -92,8 +98,14 @@ def localGoods_vs_importedGoods():
             tickformat='%b\n%Y'  # Format the ticks to display abbreviated month and full year
         ),
         yaxis_title='CPI Index Value',
-        plot_bgcolor='white'
+        plot_bgcolor='white',
+        width=900
     )
 
     # Display the figure in Streamlit
     st.plotly_chart(fig)
+    st.markdown("""
+    <div class="info">
+        While the prices of imported goods remain higher, the trend has been moderate
+    </div>
+    """, unsafe_allow_html=True)
