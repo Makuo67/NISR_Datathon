@@ -1,6 +1,7 @@
 import seaborn as sns
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -22,51 +23,66 @@ def display_sector_to_gdp_time_series_analysis():
 
     sectors_df = df[['Quarters', 'AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
                     'SERVICES', 'Taxes less subsidies on products']]
+    
+    years = sectors_df['Quarters'].str.split().str[0].unique()
+    # Create Plotly figure
+    fig = go.Figure()
 
-    fig, ax = plt.subplots(figsize=(12, 6))  # Increase the width of the chart
+    # Define sector names and colors
+    sectors = {
+        'AGRICULTURE, FORESTRY & FISHING': 'green',
+        'INDUSTRY': 'blue',
+        'SERVICES': 'orange',
+        'Taxes less subsidies on products': 'purple'
+    }
+    sectors_df['Year'] = sectors_df['Quarters'].str.split().str[0]
 
-    ax.plot(sectors_df['AGRICULTURE, FORESTRY & FISHING'], color='green')
-    ax.plot(sectors_df['INDUSTRY'], color='blue')
-    ax.plot(sectors_df['SERVICES'], color='orange')
-    ax.plot(sectors_df['Taxes less subsidies on products'], color='purple')
+    # Add lines for each sector
+    for sector, color in sectors.items():
+        fig.add_trace(go.Scatter(
+            x=sectors_df['Quarters'],
+            y=sectors_df[sector],
+            mode='lines',
+            name=sector,
+            line=dict(color=color)
+        ))
 
-    ax.set_title('GDP By Sector Time-Series Analysis at Constant Price(2017)', fontweight='bold')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Percentage(%)')
+    # Update layout
+    fig.update_layout(
+        title='GDP By Sector Time-Series Analysis at Constant Price(2017)',
+        xaxis=dict(
+            title='Year',
+            tickmode='array',
+            tickvals=[f'{year} Q1' for year in years],  # Set tick values at the first quarter of each year
+            ticktext=years,  # Set tick labels to be just the year
+            tickangle=90 
+        ),
+        yaxis_title='Percentage(%)',
+        legend_title='Sectors',
+        hovermode='x unified',
+        width=900,
+        height=500
+    )
 
-    x_labels = sectors_df['Quarters']
-    unique_quarters = x_labels[0::4].str.split().str[0].unique()
-    x_ticks = np.arange(len(x_labels))
-
-    ax.set_xticks(x_ticks)
-    ax.set_xticklabels(x_labels, rotation=90)
-    ax.set_xticks(x_ticks[::4])
-    ax.set_xticklabels(unique_quarters, rotation=90)
-
-    green_patch = mpatches.Patch(color='green', label=agriculture, linewidth=2)
-    blue_patch = mpatches.Patch(color='blue', label=industry, linewidth=2)
-    orange_patch = mpatches.Patch(
-        color='orange', label=services, linewidth=2)
-    purple_patch = mpatches.Patch(
-        color='purple', label=taxes_and_less, linewidth=2)
-
-    # Move the legend outside the chart using bbox_to_anchor
-    legend = ax.legend(handles=[green_patch, blue_patch, orange_patch, purple_patch],
-                       loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
-
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-
-    ax.grid(axis='x', linestyle='--', linewidth=0.5)
-    ax.grid(axis='y', linestyle='--', linewidth=0.5)
-
-    # Add percentage sign at the top edge of the y-axis
-    ax.annotate('%', fontsize=10, xy=(0, 1.02),
-                xycoords=('axes fraction', 'axes fraction'))
-
-    plt.tight_layout()
-
-    st.pyplot(fig)
+    fig.update_yaxes(range=[0, 0.52])
+    # Display the figure in Streamlit
+    st.plotly_chart(fig)
+    st.markdown("""
+    <style>
+    .info {
+        color: #ffff;
+        background-color: #0047AB;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    </style>
+    <div class="info">
+        INDUSTRY sector has increased by 33.11% since 2006Q1 to 2023Q2
+    </div>
+    """, unsafe_allow_html=True)
 
     # Calculate the change in each sector from the first to the last quarter
     sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
@@ -129,42 +145,49 @@ def display_quarterly_gdp():
 
     selected_label = 'Average GDP (2006-2022)' if selected_year == 'Average(2006-2022)' else f"GDP for Year {selected_year}"
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    colors = ['green', 'blue', 'orange', 'purple']  # Colors for each sector
+    fig = go.Figure()
+
+    # Colors for each sector
+    colors = ['green', 'blue', 'orange', 'purple']
+
+    # Add lines for each sector
     for col, color in zip(gdp_columns, colors):
-        ax.plot(avg_quarterly_GDP['Quarter'], avg_quarterly_GDP[col],
-                marker='o', linestyle='-', label=col, color=color)
+        fig.add_trace(go.Scatter(
+            x=avg_quarterly_GDP['Quarter'],
+            y=avg_quarterly_GDP[col],
+            mode='lines+markers',
+            name=col,
+            line=dict(color=color)
+        ))
 
-    ax.set_title('Quarterly GDP Trend for' + selected_label, fontsize=18, fontweight='bold')
-    ax.set_xlabel('Quarter', fontsize=12)
-    ax.set_ylabel(ylabel, fontsize=12)
-    ax.grid(True, linestyle='--', alpha=0.5)
-    ax.set_xticks(['Q1', 'Q2', 'Q3', 'Q4'])
-    ax.tick_params(axis='both', which='major', labelsize=10)
+    # Update layout
+    fig.update_layout(
+        title=f'Quarterly GDP Trend for {selected_label}',
+        xaxis_title='Quarter',
+        yaxis_title=ylabel,
+        legend_title='Sectors',
+        hovermode='x',
+        width=900
+    )
 
-    legend_patches = [
-        mpatches.Patch(color=color, label=col, linewidth=2)
-        for col, color in zip(gdp_columns, colors)
-    ]
-
-    legend = ax.legend(handles=legend_patches,
-                       loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
-
-    # Add Frw(Billion) at the top edge of the y-axis
-    ax.annotate('Frw(Billion)', fontsize=10, xy=(0, 1.02),
-                xycoords=('axes fraction', 'axes fraction'))
-
-    # Remove top and right spines
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-
-    # Increase the width of the chart
-    fig.subplots_adjust(right=0.8)
-    # fig.tight_layout(pad=1.0)
-
-    # Display the plot in Streamlit
-    st.pyplot(fig)
-
+    # Display the figure in Streamlit
+    st.plotly_chart(fig)
+    st.markdown("""
+    <style>
+    .info {
+        color: #ffff;
+        background-color: #0047AB;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    </style>
+    <div class="info">
+        Averagely, Q4 shows the highest GDP Growth for all the sectors
+    </div>
+    """, unsafe_allow_html=True)
 
 # display_sector_to_gdp_time_series_analysis()
 # display_quarterly_gdp()

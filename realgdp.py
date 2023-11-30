@@ -56,8 +56,25 @@ def real_gdp_growth():
             title='GDP (in billion RWF)'
         ),
             xaxis=dict(tickmode='array', tickvals=sector_data_last_six_years['Year']),
-            plot_bgcolor='white',  
+            plot_bgcolor='white',
+            width=750  
         )
 
         # Display the figure in Streamlit
     st.plotly_chart(fig)
+    st.markdown("""
+    <style>
+    .info {
+        color: #ffff;
+        background-color: #0047AB;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    </style>
+    <div class="info">
+        The GDP has been growing consistently with with a notable expansion in the services sectors, suggesting a diversifying economy increasingly less dependent on agriculture.
+    </div>
+    """, unsafe_allow_html=True)
