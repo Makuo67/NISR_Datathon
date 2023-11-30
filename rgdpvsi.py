@@ -76,7 +76,7 @@ def display_realgdp_to_inflation():
         height=700
     )
 
-    fig.update_yaxes(range=[-0.05, 0.2]) 
+    fig.update_yaxes(range=[-0.05, 0.2])
     # Display the figure in Streamlit
     st.plotly_chart(fig, use_container_width=True)
     st.markdown("""
@@ -95,6 +95,7 @@ def display_realgdp_to_inflation():
         Inflation Rate and Real GDP Growth Rate have been fluctuating over the years showing significant economic pressures in 2020 and 2022
     </div>
     """, unsafe_allow_html=True)
+
 
 def display_per_capita():
     """Plot Growth Trend of GDP per Capita over the Years with Plotly for interactivity"""

@@ -5,17 +5,27 @@ Welcome to the NISR Data Science Hackathon repository! This repository contains 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Features](#features)
 - [Getting Started](#getting-started)
 - [Screenshot](#screenshot)
 - [Data Used](#data-used)
 - [Dashboard Information](#dashboard-information)
 - [How to Interact](#how-to-interact)
 - [Contributing](#contributing)
+- [Authors](#authors)
 - [License](#license)
 
 ## Overview
 
-This repository is created for the NISR Data Science Hackathon. It provides a starting point for participants to work on data analysis, machine learning, and data visualization projects related to NISR datasets. Whether you're a beginner or an experienced data scientist, you'll find valuable resources here.
+This project presents an interactive dashboard that provides in-depth insights into GDP (Gross Domestic Product) and CPI (Consumer Price Index) trends. Designed to aid economic analysts, policymakers, and business strategists, the dashboard offers a comprehensive view of crucial economic indicators and their implications.
+
+## Features
+
+- Interactive GDP Analysis: Explore GDP growth trends over time, with detailed visualizations highlighting sector-wise contributions.
+- CPI Trend Examination: Delve into CPI changes, understanding inflation and its impact on the economy.
+- Data-Driven Insights: Gain valuable insights from processed and well-presented economic data.
+- User-Friendly Interface: Navigate through an intuitive and accessible dashboard layout.
+- Responsive Design: Access insights on multiple devices, ensuring a seamless experience.
 
 ## Getting Started
 
@@ -59,7 +69,7 @@ Our interactive dashboard relies on two primary datasets: Gross Domestic Product
 
 ## DashBoard Information
 
-The dashboard aims to communicate key insights derived from the GDP and CPI datasets. Through visually compelling charts, graphs, and maps, users can explore trends, sectoral breakdowns, and global comparisons, gaining a deeper understanding of Rwanda's economic performance in 2022.
+The dashboard aims to communicate key insights derived from the GDP and CPI datasets. Through visually compelling charts and graphs, users can explore trends, sectoral breakdowns, and global comparisons, gaining a deeper understanding of Rwanda's economic performance in 2022.
 
 ## How to Interact
 
@@ -79,6 +89,11 @@ Contributions to this repository are welcomed! If you'd like to contribute code,
 - Push your changes to your GitHub account.
 - Create a pull request from your fork's branch to the main repository.
 - We'll review your contributions and merge them if they add value to the project.
+
+## Authors
+
+- [Makuochukwu Christian Okeke](https://www.github.com/Makuo67)
+- [Sunday Samuel Olubode](www.github.com/SundayOlubode)
 
 ## License
 

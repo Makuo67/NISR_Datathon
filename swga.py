@@ -5,6 +5,9 @@ import plotly.graph_objects as go
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import plotly.graph_objects as go
+import mplcursors
+
 
 df = pd.read_excel('data/CovertGDP.xlsx', sheet_name='QGDP SH')
 df2 = pd.read_excel('data/CovertGDP.xlsx', sheet_name='QGDP KP')
@@ -20,10 +23,9 @@ taxes_and_less = 'Taxes less subsidies on products'
 def display_sector_to_gdp_time_series_analysis():
     """Plot the time-series for each sector
     """
-
     sectors_df = df[['Quarters', 'AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
                     'SERVICES', 'Taxes less subsidies on products']]
-    
+
     years = sectors_df['Quarters'].str.split().str[0].unique()
     # Create Plotly figure
     fig = go.Figure()
@@ -53,9 +55,10 @@ def display_sector_to_gdp_time_series_analysis():
         xaxis=dict(
             title='Year',
             tickmode='array',
-            tickvals=[f'{year} Q1' for year in years],  # Set tick values at the first quarter of each year
+            # Set tick values at the first quarter of each year
+            tickvals=[f'{year} Q1' for year in years],
             ticktext=years,  # Set tick labels to be just the year
-            tickangle=90 
+            tickangle=90
         ),
         yaxis_title='Percentage(%)',
         legend_title='Sectors',
@@ -84,7 +87,6 @@ def display_sector_to_gdp_time_series_analysis():
     </div>
     """, unsafe_allow_html=True)
 
-    # Calculate the change in each sector from the first to the last quarter
     sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
                'SERVICES', 'Taxes less subsidies on products']
 
@@ -99,10 +101,10 @@ def display_sector_to_gdp_time_series_analysis():
 
     col1, col2 = st.columns((2))
     with col1:
-        with st.expander("Click to see Declining Sectors", expanded=False):
+        with st.expander("Click to see Declined Sectors(in % GDP)", expanded=False):
             st.write(declining_sectors)
     with col2:
-        with st.expander("Click to see Growing Sectors"):
+        with st.expander("Click to see Growing Sectors(in % GDP)"):
             st.write(growing_sectors)
 
 
@@ -189,5 +191,7 @@ def display_quarterly_gdp():
     </div>
     """, unsafe_allow_html=True)
 
-# display_sector_to_gdp_time_series_analysis()
-# display_quarterly_gdp()
+
+if __name__ == "__main__":
+    display_sector_to_gdp_time_series_analysis()
+    display_quarterly_gdp()
