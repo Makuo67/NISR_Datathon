@@ -62,6 +62,7 @@ def display_realgdp_to_inflation():
 
     st.pyplot(fig, use_container_width=True)
 
+
 def display_per_capita():
     """Plot Real GDP to Inflation Rate
     """
@@ -78,4 +79,8 @@ def display_per_capita():
     ax.grid(True)
 
     st.pyplot(fig)
-# display_realgdp_to_inflation()
+
+
+if __name__ == "__main__":
+    display_realgdp_to_inflation()
+    display_per_capita()

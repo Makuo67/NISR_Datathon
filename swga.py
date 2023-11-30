@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import plotly.graph_objects as go
+
 
 df = pd.read_excel('data/CovertGDP.xlsx', sheet_name='QGDP SH')
 df2 = pd.read_excel('data/CovertGDP.xlsx', sheet_name='QGDP KP')
@@ -30,7 +32,8 @@ def display_sector_to_gdp_time_series_analysis():
     ax.plot(sectors_df['SERVICES'], color='orange')
     ax.plot(sectors_df['Taxes less subsidies on products'], color='purple')
 
-    ax.set_title('GDP By Sector Time-Series Analysis at Constant Price(2017)', fontweight='bold')
+    ax.set_title(
+        'GDP By Sector Time-Series Analysis at Constant Price(2017)', fontweight='bold')
     ax.set_xlabel('Year')
     ax.set_ylabel('Percentage(%)')
 
@@ -131,24 +134,20 @@ def display_quarterly_gdp():
 
     fig, ax = plt.subplots(figsize=(10, 6))
     colors = ['green', 'blue', 'orange', 'purple']  # Colors for each sector
-    for col, color in zip(gdp_columns, colors):
+    for i, (col, color) in enumerate(zip(gdp_columns, colors), start=1):
         ax.plot(avg_quarterly_GDP['Quarter'], avg_quarterly_GDP[col],
-                marker='o', linestyle='-', label=col, color=color)
+                marker='o', linestyle='-', label=f'{col} - Trace {i}', color=color)
 
-    ax.set_title('Quarterly GDP Trend for' + selected_label, fontsize=18, fontweight='bold')
+    ax.set_title('Quarterly GDP Trend for ' + selected_label,
+                 fontsize=18, fontweight='bold')
     ax.set_xlabel('Quarter', fontsize=12)
     ax.set_ylabel(ylabel, fontsize=12)
     ax.grid(True, linestyle='--', alpha=0.5)
     ax.set_xticks(['Q1', 'Q2', 'Q3', 'Q4'])
     ax.tick_params(axis='both', which='major', labelsize=10)
 
-    legend_patches = [
-        mpatches.Patch(color=color, label=col, linewidth=2)
-        for col, color in zip(gdp_columns, colors)
-    ]
-
-    legend = ax.legend(handles=legend_patches,
-                       loc='upper left', bbox_to_anchor=(1.05, 1), borderaxespad=0.)
+    legend = ax.legend(loc='upper left', bbox_to_anchor=(
+        1.05, 1), borderaxespad=0.)
 
     # Add Frw(Billion) at the top edge of the y-axis
     ax.annotate('Frw(Billion)', fontsize=10, xy=(0, 1.02),
@@ -160,11 +159,11 @@ def display_quarterly_gdp():
 
     # Increase the width of the chart
     fig.subplots_adjust(right=0.8)
-    # fig.tight_layout(pad=1.0)
 
     # Display the plot in Streamlit
     st.pyplot(fig)
 
 
-# display_sector_to_gdp_time_series_analysis()
-# display_quarterly_gdp()
+if __name__ == "__main__":
+    display_sector_to_gdp_time_series_analysis()
+    display_quarterly_gdp()
