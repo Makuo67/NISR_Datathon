@@ -56,7 +56,7 @@ This project presents an interactive dashboard that provides in-depth insights i
    ```
 5. Run App:
    ```bash
-   streamlit run myapp.py
+   streamlit run app.py
    ```
 
 ## Screenshot
