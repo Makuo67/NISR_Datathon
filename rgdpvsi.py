@@ -96,10 +96,6 @@ def display_realgdp_to_inflation():
     </div>
     """, unsafe_allow_html=True)
 
-    # Comment
-    comment = "Inflation Rate and Real GDP Growth Rate have been fluctuating over the years with signficant change rate in opposite directions."
-    st.text(comment)
-
 
 def display_per_capita():
     """Plot Growth Trend of GDP per Capita over the Years with Plotly for interactivity"""

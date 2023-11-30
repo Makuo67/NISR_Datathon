@@ -92,10 +92,6 @@ def display_sector_to_gdp_time_series_analysis():
     </div>
     """, unsafe_allow_html=True)
 
-    # Comment
-    comment = "INDUSTRY sector has increased by 33.11% since 2006Q1 to 2023Q2"
-    st.text(comment)
-
     sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
                'SERVICES', 'Taxes less subsidies on products']
 
