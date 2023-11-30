@@ -75,6 +75,6 @@ def real_gdp_growth():
     }
     </style>
     <div class="info">
-        The GDP has been growing consistently with with a notable expansion in the services sectors, suggesting a diversifying economy increasingly less dependent on agriculture.
+        The GDP has been growing consistently with with a notable expansion in the services sector.
     </div>
     """, unsafe_allow_html=True)
