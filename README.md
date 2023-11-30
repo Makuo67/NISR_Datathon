@@ -51,7 +51,7 @@ This repository is created for the NISR Data Science Hackathon. It provides a st
 
 ## Screenshot
 
-![Dashboard Screenshot](NISR_Dashboard.png)
+![Dashboard Screenshot](images/NISR_Dashboard.png)
 
 ## Data Used
 

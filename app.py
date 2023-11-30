@@ -4,6 +4,14 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import streamlit as st
 
+from swga import display_quarterly_gdp, display_sector_to_gdp_time_series_analysis
+from rgdpvsi import display_realgdp_to_inflation, display_per_capita
+from realgdp import real_gdp_growth
+from gdp_rate import gdp_rate
+from expenditure import expenditure_vs_GDP
+from cpi_time_series import energy_vs_freshProducs_vs_general_index, localGoods_vs_importedGoods
+from inflation_category import inflation_by_category
+
 # Set Streamlit page configuration
 st.set_page_config(
     page_title="GDP and CPI DashBoard",
@@ -23,7 +31,6 @@ gdp_expenditure = pd.read_excel(
     engine="openpyxl",
     sheet_name="T3 GDP CY"
 )
-st.dataframe(gdp_expenditure)
 sector_gdp = pd.read_excel(
     io="GDP_data.xlsx",
     engine="openpyxl",
@@ -43,7 +50,8 @@ quarterly_gdp = pd.read_excel(
     engine="openpyxl",
     sheet_name="QGDP KP"
 )
-## Loading CPI data file
+
+# Loading CPI data file
 cpi_urban = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
@@ -69,7 +77,8 @@ st.markdown(
 last_gdp_value = quarterly_gdp['GROSS DOMESTIC PRODUCT (GDP)'].iloc[-1]
 last_gdp_quarter = quarterly_gdp['Quarters'].iloc[-1]
 last_cpi_value = cpi_urban['GENERAL INDEX (CPI)'].iloc[-1]
-inflation_rate = ((cpi_urban['GENERAL INDEX (CPI)'].iloc[-1] / cpi_urban['GENERAL INDEX (CPI)'].iloc[-13]) - 1) * 100
+inflation_rate = ((cpi_urban['GENERAL INDEX (CPI)'].iloc[-1] /
+                  cpi_urban['GENERAL INDEX (CPI)'].iloc[-13]) - 1) * 100
 last_population_value = gdp_macro_economy['Total population (millions)'].iloc[-1]
 
 cards_data = [
@@ -78,7 +87,7 @@ cards_data = [
         'subtitle': 'Constant 2017 prices, Billions RWF',
         'time': f'{last_gdp_quarter}',
         'value': f"{last_gdp_value:.2f}",
-        'icon': '💼' 
+        'icon': '💼'
     },
     {
         'title': 'Consumer Price Index',
@@ -91,7 +100,7 @@ cards_data = [
         'title': 'Inflation Rate',
         'subtitle': 'Year-over-Year',
         'time': 'October 2023',
-        'value': f"{inflation_rate:.2f}%",  
+        'value': f"{inflation_rate:.2f}%",
         'icon': '📈'
     },
     {
@@ -163,58 +172,52 @@ subheader_style = """
 </style>
 """
 st.markdown(subheader_style, unsafe_allow_html=True)
-st.markdown(f'<div class="subheader-container">GDP Dynamics and Insights</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">GDP Dynamics and Insights</div>',
+            unsafe_allow_html=True)
 
-# Create a grid of 2 boxes for GDP visualization
+# Create a grid of 2 boxes for Real GDP and its Growth rate visualization
 cola, colb = st.columns(2)
 with cola:
-    last_six_years = gdp_macro_economy[gdp_macro_economy['Year'] >= (2022-5)]
-    sector_data_last_six_years = sector_gdp[sector_gdp['Year'].isin(last_six_years['Year'])]
-    # Create the figure
-fig = go.Figure()
+    real_gdp_growth()
 
-# Add bar chart for each sector
-fig.add_trace(go.Bar(
-    x=sector_data_last_six_years['Year'],
-    y=sector_data_last_six_years['AGRICULTURE, FORESTRY & FISHING'],
-    name='Agriculture, Forestry & Fishing',
-    marker_color='orange'
-))
-fig.add_trace(go.Bar(
-    x=sector_data_last_six_years['Year'],
-    y=sector_data_last_six_years['INDUSTRY'],
-    name='Industry',
-    marker_color='grey'
-))
-fig.add_trace(go.Bar(
-    x=sector_data_last_six_years['Year'],
-    y=sector_data_last_six_years['SERVICES'],
-    name='Services',
-    marker_color='brown'
-))
-fig.add_trace(go.Bar(
-    x=sector_data_last_six_years['Year'],
-    y=sector_data_last_six_years['TAXES LESS SUBSIDIES ON PRODUCTS'],
-    name='Taxes less subsidies on products',
-    marker_color='yellow'
-))
+with colb:
+   gdp_rate()
 
-# Add line chart for growth rate
-fig.add_trace(go.Scatter(
-    x=last_six_years['Year'],
-    y=last_six_years['Growth rate'],
-    name='Growth Rate',
-    mode='lines+markers',
-    line=dict(color='black', dash='dash')
-))
+colc, cold = st.columns(2)
 
-# Update the layout for a stacked bar chart
-fig.update_layout(barmode='stack')
+with colc:
+    expenditure_vs_GDP(gdp_expenditure_percentage)
 
-# Display the figure in Streamlit
-st.plotly_chart(fig)
 
+with cold:
+    display_sector_to_gdp_time_series_analysis()
+
+colg, colh = st.columns(2)
+
+with colg:
+    display_quarterly_gdp()
+
+with colh:
+    display_per_capita()
 
 
 st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>', unsafe_allow_html=True)
+
+cole, colf = st.columns(2)
+
+with cole:
+    energy_vs_freshProducs_vs_general_index()
+
+
+with colf:
+    localGoods_vs_importedGoods()
+
+
+inflation_by_category()
+
+
+st.markdown(subheader_style, unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">Comparisons of GDP, Inflation and Per Capita Data</div>', unsafe_allow_html=True)
+
+display_realgdp_to_inflation()
