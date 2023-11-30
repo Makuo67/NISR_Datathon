@@ -1,3 +1,4 @@
+import base64
 import plotly.express as px
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,6 +12,7 @@ from gdp_rate import gdp_rate
 from expenditure import expenditure_vs_GDP
 from cpi_time_series import energy_vs_freshProducs_vs_general_index, localGoods_vs_importedGoods
 from inflation_category import inflation_by_category
+from exchange_rate import display_exchange_rate_trend
 
 # Set Streamlit page configuration
 st.set_page_config(
@@ -68,9 +70,9 @@ cpi_other_indices = pd.read_excel(
 # Header and Footer Image
 header_image_path = 'images/NISR_logo.png'
 
-header_col1, header_col2, header_col3 = st.columns([4,6,1])
+header_col1, header_col2, header_col3 = st.columns([4, 6, 1])
 with header_col2:
-    st.image(header_image_path, width=400) 
+    st.image(header_image_path, width=400)
 
 # Display the title with emoji centered
 st.markdown(
@@ -189,7 +191,7 @@ with cola:
     real_gdp_growth()
 
 with colb:
-   gdp_rate()
+    gdp_rate()
 
 colc, cold = st.columns(2)
 
@@ -210,7 +212,8 @@ with colh:
 
 
 st.markdown(subheader_style, unsafe_allow_html=True)
-st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>',
+            unsafe_allow_html=True)
 
 cole, colf = st.columns(2)
 
@@ -226,16 +229,19 @@ inflation_by_category()
 
 
 st.markdown(subheader_style, unsafe_allow_html=True)
-st.markdown(f'<div class="subheader-container">Comparisons of GDP, Inflation and Per Capita Data</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="subheader-container">Comparisons of GDP, Inflation and Per Capita Data</div>',
+            unsafe_allow_html=True)
 
 display_realgdp_to_inflation()
+display_exchange_rate_trend()
 
 # Footer
-import base64
+
 
 def get_image_as_base64(path):
     with open(path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode('utf-8')
+
 
 footer_image_base64 = get_image_as_base64('images/NISR_logo.png')
 
