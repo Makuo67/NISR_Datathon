@@ -44,16 +44,13 @@ inflation_rate = 'Inflation Rate'
 def display_realgdp_to_inflation():
     """Plot Real GDP to Inflation Rate
     """
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(5, 2))
 
     ax.plot(merged_data['Year'], merged_data['Inflation Rate'],
             marker='o', linestyle='-', color='red', label='Inflation Rate')
 
     ax.plot(merged_data['Year'], merged_data['Growth rate.1'],
             marker='o', linestyle='-', color='blue', label='Real GDP Growth rate')
-
-    ax.plot(merged_data['Year'], merged_data['GDP per head (in current US dollars)'],
-            marker='o', linestyle='-', color='green', label='Per Capita GDP')
 
     ax.set_title(
         'Trend of Inflation Rate and Real GDP Growth Rate over the Years')
@@ -63,7 +60,22 @@ def display_realgdp_to_inflation():
 
     ax.grid(True)
 
+    st.pyplot(fig, use_container_width=True)
+
+def display_per_capita():
+    """Plot Real GDP to Inflation Rate
+    """
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(merged_data['Year'], merged_data['GDP per head (in current US dollars)'],
+            marker='o', linestyle='-', color='green', label='Per Capita GDP')
+
+    ax.set_title(
+        'Growth Trend of GDP per Capita over the Years', fontweight='bold')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Rate Percentage(%)')
+    ax.legend()
+
+    ax.grid(True)
+
     st.pyplot(fig)
-
-
-display_realgdp_to_inflation()
+# display_realgdp_to_inflation()

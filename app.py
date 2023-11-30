@@ -4,6 +4,14 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import streamlit as st
 
+from swga import display_quarterly_gdp, display_sector_to_gdp_time_series_analysis
+from rgdpvsi import display_realgdp_to_inflation, display_per_capita
+from realgdp import real_gdp_growth
+from gdp_rate import gdp_rate
+from expenditure import expenditure_vs_GDP
+from cpi_time_series import energy_vs_freshProducs_vs_general_index, localGoods_vs_importedGoods
+from inflation_category import inflation_by_category
+
 # Set Streamlit page configuration
 st.set_page_config(
     page_title="GDP and CPI DashBoard",
@@ -17,7 +25,6 @@ gdp_macro_economy = pd.read_excel(
     engine="openpyxl",
     sheet_name="Table A"
 )
-st.dataframe(gdp_macro_economy)
 
 gdp_expenditure = pd.read_excel(
     io="GDP_data.xlsx",
@@ -44,14 +51,13 @@ quarterly_gdp = pd.read_excel(
     sheet_name="QGDP KP"
 )
 
-# st.dataframe(quarterly_gdp)
-## Loading CPI data file
+# Loading CPI data file
 cpi_urban = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
     sheet_name="Urban"
 )
-# st.dataframe(cpi_urban)
+
 cpi_other_indices = pd.read_excel(
     io="CleanedCPI.xlsx",
     engine="openpyxl",
@@ -169,268 +175,49 @@ st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">GDP Dynamics and Insights</div>',
             unsafe_allow_html=True)
 
-# Create a grid of 2 boxes for GDP visualization
+# Create a grid of 2 boxes for Real GDP and its Growth rate visualization
 cola, colb = st.columns(2)
 with cola:
-    last_six_years = gdp_macro_economy[gdp_macro_economy['Year'] >= (2022-22)]
-    sector_data_last_six_years = sector_gdp[sector_gdp['Year'].isin(last_six_years['Year'])]
-    # Calculate the total GDP for each year for hover information
-    sector_data_last_six_years['Total GDP'] = sector_data_last_six_years[['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY', 'SERVICES', 'TAXES LESS SUBSIDIES ON PRODUCTS']].sum(axis=1)
-
-
-
-    fig = go.Figure()
-    # Add stacked bar chart for each sector
-   
-    sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY', 'SERVICES', 'TAXES LESS SUBSIDIES ON PRODUCTS']
-    colors = ['green', 'blue', 'red', 'orange'] # Adjust the colors as needed
-
-    for sector, color in zip(sectors, colors):
-    # Calculate the percentage for hover as a string
-        sector_percentage = ((sector_data_last_six_years[sector] / sector_data_last_six_years['Total GDP']) * 100).astype(str)
-
-    # Create hovertemplate string with percentage included
-        hovertemplate = ['%{y:.2f} billion RWF<br>' + sector + '<br>' + perc + '%' for perc in sector_percentage]
-
-        fig.add_trace(go.Bar(
-            x=sector_data_last_six_years['Year'],
-            y=sector_data_last_six_years[sector],
-            name=sector,
-            marker_color=color,
-            hovertemplate=hovertemplate
-        ))
-    
-    # Update the layout for a stacked bar chart
-    fig.update_layout(
-            barmode='stack',
-            title='Real GDP Growth (2000 - 2022)',
-        yaxis=dict(
-            tickmode='auto',
-            tickformat=',.1f',  # This will format the tick as a floating number with two decimal places
-            title='GDP (in billion RWF)'
-        ),
-            xaxis=dict(tickmode='array', tickvals=sector_data_last_six_years['Year']),
-            plot_bgcolor='white',  # Set background color to white for better readability
-        )
-
-        # Display the figure in Streamlit
-    st.plotly_chart(fig)
+    real_gdp_growth()
 
 with colb:
-    # Filter data to the last six years up to 2022
-    gdp_growth_data = gdp_macro_economy[gdp_macro_economy['Year']>= (2022-22)]
+   gdp_rate()
 
-    # Create a Plotly figure
-    fig = go.Figure()
+colc, cold = st.columns(2)
 
-    # Add the area chart
-    fig.add_trace(go.Scatter(
-    x=gdp_growth_data['Year'],
-    y=gdp_growth_data['Growth rate'] * 100,
-    fill='tozeroy', 
-    mode='lines+markers+text',
-    line_color='blue', 
-    text=[f'{rate * 100:.2f}%' for rate in gdp_growth_data['Growth rate']],
-    textposition='top center', 
-    hoverinfo='x+y', 
-    name='GDP Growth Rate'
-    ))
-
-    # Update layout
-    fig.update_layout(
-        title='GDP Growth Rate (2000 - 2022)',
-        xaxis_title='Year',
-        yaxis_title='Growth Rate (%)',
-        plot_bgcolor='white'
-    )
-
-  
-    st.plotly_chart(fig)
+with colc:
+    expenditure_vs_GDP(gdp_expenditure_percentage)
 
 
+with cold:
+    display_sector_to_gdp_time_series_analysis()
 
-# Expenditure comparison
-gdp_expenditure_percentage = gdp_expenditure_percentage[
-    gdp_expenditure_percentage['Year'].between(2000, 2022)
-]
-gdp_expenditure_percentage['GDP Growth Rate'] = gdp_expenditure_percentage['Gross Domestic Product'] * 100
-gdp_expenditure_percentage['Expenditure Growth Rate'] = gdp_expenditure_percentage['Total final consumption expenditure'] * 100
+colg, colh = st.columns(2)
 
-# Create the figure
-fig = go.Figure()
+with colg:
+    display_quarterly_gdp()
 
-# Add GDP bar
-fig.add_trace(go.Bar(
-    x=gdp_expenditure_percentage['Year'],
-    y=gdp_expenditure_percentage['GDP Growth Rate'],
-    name='GDP Growth Rate',
-    marker=dict(color='blue')
-))
+with colh:
+    display_per_capita()
 
-# Add Expenditure bar
-fig.add_trace(go.Bar(
-    x=gdp_expenditure_percentage['Year'],
-    y=gdp_expenditure_percentage['Expenditure Growth Rate'],
-    name='Expenditure Rate',
-    marker=dict(color='red')
-))
 
-# Update layout for a bar chart
-fig.update_layout(
-    title='GDP vs Expenditure Over Time (2017-2022)',
-    xaxis=dict(title='Year'),
-    yaxis=dict(title='Growth Rate (%)', tickformat='.2f'),
-    barmode='group',  # Use 'group' for grouped bar chart
-    plot_bgcolor='white',
-    legend_title_text='Indicator'
-)
-
-# Display the figure in Streamlit
-st.plotly_chart(fig)
 st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">Insights On the Consumer Price Index</div>', unsafe_allow_html=True)
 
-# Create the figure
-fig = go.Figure()
+cole, colf = st.columns(2)
 
-# Add a line to the figure for each index
-indices = ['General Index excluding fresh Products and energy', 'Energy index', 'Fresh Products index']
-colors = ['blue', 'red', 'green']  # Choose colors that you prefer
-
-for index, color in zip(indices, colors):
-    fig.add_trace(go.Scatter(
-        x=cpi_other_indices['Month'],
-        y=cpi_other_indices[index],
-        mode='lines',
-        name=index,
-        line=dict(color=color)
-    ))
-
-# Update layout
-fig.update_layout(
-    title='CPI-U Trends of Energy Index, Fresh Products Index and General Index',
-    xaxis_title='Month',
-    xaxis=dict(
-        rangeselector=dict(
-            buttons=list([
-                dict(count=1, label='1Y', step='year', stepmode='backward'),
-                dict(count=2, label='2Y', step='year', stepmode='backward'),
-                dict(count=3, label='3Y', step='year', stepmode='backward'),
-                dict(step='all')
-            ])
-        ),
-        type='date',
-        tickformat='%b\n%Y'  # Format the ticks to display abbreviated month and full year
-    ),
-    yaxis_title='CPI Index Value',
-    plot_bgcolor='white'
-)
-
-# Display the figure in Streamlit
-st.plotly_chart(fig)
+with cole:
+    energy_vs_freshProducs_vs_general_index()
 
 
-# CPI Trend of Local Goods vs Imported Goods
-# Create the figure
-fig = go.Figure()
-
-# Add a line to the figure for each index
-indices = ['Local Goods Index', 'Imported Goods Index']
-colors = ['red', 'green']  # Choose colors that you prefer
-
-for index, color in zip(indices, colors):
-    fig.add_trace(go.Scatter(
-        x=cpi_other_indices['Month'],
-        y=cpi_other_indices[index],
-        mode='lines',
-        name=index,
-        line=dict(color=color)
-    ))
-
-# Update layout
-fig.update_layout(
-    title='CPI-U Trends of Local Goods vs Imported Goods',
-    xaxis_title='Month',
-    xaxis=dict(
-        rangeselector=dict(
-            buttons=list([
-                dict(count=1, label='1Y', step='year', stepmode='backward'),
-                dict(count=2, label='2Y', step='year', stepmode='backward'),
-                dict(count=3, label='3Y', step='year', stepmode='backward'),
-                dict(step='all')
-            ])
-        ),
-        type='date',
-        tickformat='%b\n%Y'  # Format the ticks to display abbreviated month and full year
-    ),
-    yaxis_title='CPI Index Value',
-    plot_bgcolor='white'
-)
-
-# Display the figure in Streamlit
-st.plotly_chart(fig)
+with colf:
+    localGoods_vs_importedGoods()
 
 
-# FY Trend
-cpi_urban['Year'] = cpi_urban['Month'].dt.year
-cpi_urban['Month_Name'] = cpi_urban['Month'].dt.month_name()
+inflation_by_category()
 
-# Define a function to calculate the year-over-year change rate for each category
-def calculate_change_rate(df, year, categories):
-    current_year_data = df[df['Year'] == year].groupby('Month_Name').mean()
-    previous_year_data = df[df['Year'] == year - 1].groupby('Month_Name').mean()
-
-    # Assuming you want to compare October to October
-    change_rates = {}
-    for category in categories:
-        current_value = current_year_data.loc['October', category]
-        previous_value = previous_year_data.loc['October', category]
-        change_rate = ((current_value - previous_value) / previous_value) * 100
-        change_rates[category] = change_rate
-    
-    return change_rates
-
-# Calculate change rates for the required years
-categories = [
-    'Food and non-alcoholic beverages', 'Alcoholic beverages and tobacco',
-    'Clothing and footwear', 'Housing, water, electricity, gas and other fuels',
-    'Furnishing', 'Health', 
-    'Transport', 'Communication', 'Recreation and culture',	
-    'Education', 'Restaurants and hotels', 'Miscellaneous goods and services'
-
-]
-
-# Calculate change rates for 2022/2023
-change_rates_2022_2023 = calculate_change_rate(cpi_urban, 2023, categories)
-
-# Convert to DataFrame for easier handling
-change_rates_df = pd.DataFrame(list(change_rates_2022_2023.items()), columns=['Category', 'Change Rate'])
-
-# Sort the DataFrame by 'Change Rate' in ascending order
-change_rates_df.sort_values('Change Rate', inplace=True)
-
-# Create the horizontal bar chart
-fig = go.Figure()
-
-fig.add_trace(go.Bar(
-    x=change_rates_df['Change Rate'],
-    y=change_rates_df['Category'],
-    orientation='h',  # Horizontal bar chart
-    text=change_rates_df['Change Rate'].apply(lambda x: f"{x:.2f}%"),  # Add text labels
-    textposition='auto',  # Position the text at the end of bars
-))
-
-# Update layout
-fig.update_layout(
-    title='Inflation Rate by Category (October,2022 - October,2023)',
-    xaxis=dict(title='Change Rate (%)'),
-    yaxis=dict(title='Category'),
-    plot_bgcolor='white',
-    showlegend=False,
-)
-
-# Display the figure in Streamlit
-st.plotly_chart(fig)
 
 st.markdown(subheader_style, unsafe_allow_html=True)
 st.markdown(f'<div class="subheader-container">Comparisons of GDP, Inflation and Per Capita Data</div>', unsafe_allow_html=True)
+
+display_realgdp_to_inflation()

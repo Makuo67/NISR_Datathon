@@ -19,7 +19,6 @@ taxes_and_less = 'Taxes less subsidies on products'
 def display_sector_to_gdp_time_series_analysis():
     """Plot the time-series for each sector
     """
-    st.title('Sector Wise GDP Analysis')
 
     sectors_df = df[['Quarters', 'AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
                     'SERVICES', 'Taxes less subsidies on products']]
@@ -31,7 +30,7 @@ def display_sector_to_gdp_time_series_analysis():
     ax.plot(sectors_df['SERVICES'], color='orange')
     ax.plot(sectors_df['Taxes less subsidies on products'], color='purple')
 
-    ax.set_title('GDP By Sector Time-Series Analysis at Constant Price(2017)')
+    ax.set_title('GDP By Sector Time-Series Analysis at Constant Price(2017)', fontweight='bold')
     ax.set_xlabel('Year')
     ax.set_ylabel('Percentage(%)')
 
@@ -114,12 +113,9 @@ def display_quarterly_gdp():
         'Quarter')[gdp_columns].mean().reset_index()
     avg_quarterly_GDP['Year'] = 'Average(2006-2022)'
 
-    # Streamlit code for plotting
-    st.title('Trend of Quarterly GDP')
-
     # Default filter range (from 2006 to 2022)
     default_years = list(range(2006, 2023))
-    default_years.insert(0, 'Average(2006-2022)')
+    default_years.insert(0, '2022')
 
     # Create a selectbox to filter by year within the default range
     selected_year = st.selectbox(
@@ -139,7 +135,7 @@ def display_quarterly_gdp():
         ax.plot(avg_quarterly_GDP['Quarter'], avg_quarterly_GDP[col],
                 marker='o', linestyle='-', label=col, color=color)
 
-    ax.set_title(selected_label, fontsize=18, fontweight='bold')
+    ax.set_title('Quarterly GDP Trend for' + selected_label, fontsize=18, fontweight='bold')
     ax.set_xlabel('Quarter', fontsize=12)
     ax.set_ylabel(ylabel, fontsize=12)
     ax.grid(True, linestyle='--', alpha=0.5)
@@ -170,5 +166,5 @@ def display_quarterly_gdp():
     st.pyplot(fig)
 
 
-display_sector_to_gdp_time_series_analysis()
-display_quarterly_gdp()
+# display_sector_to_gdp_time_series_analysis()
+# display_quarterly_gdp()
