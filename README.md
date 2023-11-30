@@ -61,7 +61,7 @@ This project presents an interactive dashboard that provides in-depth insights i
 
 ## Screenshot
 
-![Dashboard Screenshot](images/NISR_Dashboard.png)
+![Dashboard Screenshot](images/NISR_Dashboard1.png)
 
 ## Data Used
 
