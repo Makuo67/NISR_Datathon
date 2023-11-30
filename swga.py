@@ -115,7 +115,7 @@ def display_quarterly_gdp():
 
     # Default filter range (from 2006 to 2022)
     default_years = list(range(2006, 2023))
-    default_years.insert(0, '2022')
+    default_years.insert(0, 'Average(2006-2022)')
 
     # Create a selectbox to filter by year within the default range
     selected_year = st.selectbox(
