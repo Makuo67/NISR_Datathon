@@ -44,7 +44,7 @@ inflation_rate = 'Inflation Rate'
 def display_realgdp_to_inflation():
     """Plot Real GDP to Inflation Rate
     """
-    fig, ax = plt.subplots(figsize=(5, 2))
+    fig, ax = plt.subplots(figsize=(10, 4))
 
     ax.plot(merged_data['Year'], merged_data['Inflation Rate'],
             marker='o', linestyle='-', color='red', label='Inflation Rate')
@@ -53,7 +53,7 @@ def display_realgdp_to_inflation():
             marker='o', linestyle='-', color='blue', label='Real GDP Growth rate')
 
     ax.set_title(
-        'Trend of Inflation Rate and Real GDP Growth Rate over the Years')
+        'Inflation Rate and Real GDP Growth Rate Trend (2010-2022)', fontweight='bold')
     ax.set_xlabel('Year')
     ax.set_ylabel('Rate Percentage(%)')
     ax.legend()
@@ -61,6 +61,10 @@ def display_realgdp_to_inflation():
     ax.grid(True)
 
     st.pyplot(fig, use_container_width=True)
+
+    # Comment
+    comment = "Inflation Rate and Real GDP Growth Rate have been fluctuating over the years with signficant change rate in opposite directions."
+    st.text(comment)
 
 
 def display_per_capita():
@@ -79,6 +83,9 @@ def display_per_capita():
     ax.grid(True)
 
     st.pyplot(fig)
+    # Comment
+    comment = "Per Capital Growth Rate increased significantly after a sharp decline in 2020 due to the COVID-19 pandemic."
+    st.text(comment)
 
 
 if __name__ == "__main__":

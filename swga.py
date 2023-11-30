@@ -21,6 +21,11 @@ taxes_and_less = 'Taxes less subsidies on products'
 def display_sector_to_gdp_time_series_analysis():
     """Plot the time-series for each sector
     """
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import matplotlib.patches as mpatches
+    import streamlit as st
+
     sectors = ['Quarters', 'AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
                'SERVICES', 'Taxes less subsidies on products']
     sectors_df = df[sectors]
@@ -46,12 +51,12 @@ def display_sector_to_gdp_time_series_analysis():
     ax.set_xticks(x_ticks[::4])
     ax.set_xticklabels(unique_quarters, rotation=90)
 
-    green_patch = mpatches.Patch(color='green', label=agriculture, linewidth=2)
-    blue_patch = mpatches.Patch(color='blue', label=industry, linewidth=2)
+    green_patch = mpatches.Patch(color='green', label='Agriculture')
+    blue_patch = mpatches.Patch(color='blue', label='Industry')
     orange_patch = mpatches.Patch(
-        color='orange', label=services, linewidth=2)
+        color='orange', label='Services')
     purple_patch = mpatches.Patch(
-        color='purple', label=taxes_and_less, linewidth=2)
+        color='purple', label='Taxes less subsidies')
 
     # Move the legend outside the chart using bbox_to_anchor
     legend = ax.legend(handles=[green_patch, blue_patch, orange_patch, purple_patch],
@@ -71,7 +76,10 @@ def display_sector_to_gdp_time_series_analysis():
 
     st.pyplot(fig)
 
-    # Calculate the change in each sector from the first to the last quarter
+    # Comment
+    comment = "INDUSTRY sector has increased by 33.11% since 2006Q1 to 2023Q2"
+    st.text(comment)
+
     sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
                'SERVICES', 'Taxes less subsidies on products']
 
@@ -162,6 +170,10 @@ def display_quarterly_gdp():
 
     # Display the plot in Streamlit
     st.pyplot(fig)
+
+    # Comment
+    comment = "Average Q4 shows the highest GDP for all the sectors"
+    st.text(comment)
 
 
 if __name__ == "__main__":
