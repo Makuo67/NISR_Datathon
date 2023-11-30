@@ -65,6 +65,7 @@ def display_realgdp_to_inflation():
     # Comment
     comment = "Inflation Rate and Real GDP Growth Rate have been fluctuating over the years with signficant change rate in opposite directions."
     st.text(comment)
+    st.dataframe(merged_data)
 
 
 def display_per_capita():

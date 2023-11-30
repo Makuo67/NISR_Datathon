@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import plotly.graph_objects as go
+import mplcursors
 
 
 df = pd.read_excel('data/CovertGDP.xlsx', sheet_name='QGDP SH')
@@ -32,10 +33,34 @@ def display_sector_to_gdp_time_series_analysis():
     sectors_df[sectors] = sectors_df[sectors] * 100
     fig, ax = plt.subplots(figsize=(12, 6))  # Increase the width of the chart
 
-    ax.plot(sectors_df['AGRICULTURE, FORESTRY & FISHING'], color='green')
-    ax.plot(sectors_df['INDUSTRY'], color='blue')
-    ax.plot(sectors_df['SERVICES'], color='orange')
-    ax.plot(sectors_df['Taxes less subsidies on products'], color='purple')
+    # ax.plot(sectors_df['AGRICULTURE, FORESTRY & FISHING'], color='green')
+    # ax.plot(sectors_df['INDUSTRY'], color='blue')
+    # ax.plot(sectors_df['SERVICES'], color='orange')
+    # ax.plot(sectors_df['Taxes less subsidies on products'], color='purple')
+
+    # Plot the lines
+    agriculture_line, = ax.plot(
+        sectors_df['AGRICULTURE, FORESTRY & FISHING'], color='green')
+    industry_line, = ax.plot(sectors_df['INDUSTRY'], color='blue')
+    services_line, = ax.plot(sectors_df['SERVICES'], color='orange')
+    taxes_line, = ax.plot(
+        sectors_df['Taxes less subsidies on products'], color='purple')
+
+    cursor_agriculture = mplcursors.cursor(agriculture_line, hover=True)
+    cursor_agriculture.connect("add", lambda sel: sel.annotation.set_text(
+        f"Agriculture: {sel.target[0]:.2f}%"))
+
+    cursor_industry = mplcursors.cursor(industry_line, hover=True)
+    cursor_industry.connect("add", lambda sel: sel.annotation.set_text(
+        f"Industry: {sel.target[0]:.2f}%"))
+
+    cursor_services = mplcursors.cursor(services_line, hover=True)
+    cursor_services.connect("add", lambda sel: sel.annotation.set_text(
+        f"Services: {sel.target[0]:.2f}%"))
+
+    cursor_taxes = mplcursors.cursor(taxes_line, hover=True)
+    cursor_taxes.connect("add", lambda sel: sel.annotation.set_text(
+        f"Taxes: {sel.target[0]:.2f}%"))
 
     ax.set_title(
         'GDP By Sector Time-Series Analysis at Constant Price(2017)', fontweight='bold')
