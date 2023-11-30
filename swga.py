@@ -21,10 +21,10 @@ taxes_and_less = 'Taxes less subsidies on products'
 def display_sector_to_gdp_time_series_analysis():
     """Plot the time-series for each sector
     """
-
-    sectors_df = df[['Quarters', 'AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
-                    'SERVICES', 'Taxes less subsidies on products']]
-
+    sectors = ['Quarters', 'AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
+               'SERVICES', 'Taxes less subsidies on products']
+    sectors_df = df[sectors]
+    sectors_df[sectors] = sectors_df[sectors] * 100
     fig, ax = plt.subplots(figsize=(12, 6))  # Increase the width of the chart
 
     ax.plot(sectors_df['AGRICULTURE, FORESTRY & FISHING'], color='green')
