@@ -2,6 +2,10 @@
 
 Welcome to the NISR Data Science Hackathon repository! This repository contains code, data, and other resources for the NISR Data Science Hackathon built by DataDynamo team.
 
+## Presentaion Slide
+
+- [Presentaion Slide](https://www.canva.com/design/DAF1qoSW41U/CxP_4GHa4IGTiqAn1gU3WA/edit?utm_content=DAF1qoSW41U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 ## Table of Contents
 
 - [Overview](#overview)
