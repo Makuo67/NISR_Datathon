@@ -90,8 +90,14 @@ def display_sector_to_gdp_time_series_analysis():
     sectors = ['AGRICULTURE, FORESTRY & FISHING', 'INDUSTRY',
                'SERVICES', 'Taxes less subsidies on products']
 
-    first_quarter = df.iloc[0][sectors]
-    last_quarter = df.iloc[-1][sectors]
+    dfcopy = df.rename(columns={'AGRICULTURE, FORESTRY & FISHING': 'AGRICULTURE',
+                       'Taxes less subsidies on products': 'TAX LESS SUBSIDIES'})
+
+    sectors = ['AGRICULTURE', 'INDUSTRY',
+               'SERVICES', 'TAX LESS SUBSIDIES']
+
+    first_quarter = dfcopy.iloc[0][sectors]
+    last_quarter = dfcopy.iloc[-1][sectors]
 
     change = ((last_quarter - first_quarter) / first_quarter) * 100
     change = change.sort_values(ascending=True)
@@ -101,10 +107,10 @@ def display_sector_to_gdp_time_series_analysis():
 
     col1, col2 = st.columns((2))
     with col1:
-        with st.expander("Click to see Declined Sectors(in % GDP)", expanded=False):
+        with st.expander("Declined Sectors(in % of GDP)", expanded=False):
             st.write(declining_sectors)
     with col2:
-        with st.expander("Click to see Growing Sectors(in % GDP)"):
+        with st.expander("Growing Sectors(in % of GDP)"):
             st.write(growing_sectors)
 
 
